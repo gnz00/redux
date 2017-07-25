@@ -17,17 +17,6 @@ export interface Action {
   type: any;
 }
 
-/**
- * An Action type which accepts any other properties.
- * This is mainly for the use of the `Reducer` type.
- * This is not part of `Action` itself to prevent users who are extending `Action.
- * @private
- */
-export interface AnyAction extends Action {
-  // Allows any extra properties to be defined in an action.
-  [extraProps: string]: any;
-}
-
 
 /* reducers */
 
@@ -54,7 +43,7 @@ export interface AnyAction extends Action {
  *
  * @template S State object type.
  */
-export type Reducer<S> = (state: S, action: AnyAction) => S;
+export type Reducer<S,A extends Action = Action> = (state: S, action: A) => S;
 
 /**
  * Object whose values correspond to different reducer functions.
@@ -104,8 +93,8 @@ export function combineReducers<S>(reducers: ReducersMapObject): Reducer<S>;
  * transform, delay, ignore, or otherwise interpret actions or async actions
  * before passing them to the next middleware.
  */
-export interface Dispatch<S> {
-    <A extends Action>(action: A): A;
+export interface Dispatch<S, A extends Action = Action> {
+    (action: A): A;
 }
 
 /**
@@ -321,7 +310,7 @@ export function applyMiddleware(...middlewares: Middleware[]): GenericStoreEnhan
  *
  * @template A Returned action type.
  */
-export interface ActionCreator<A> {
+export interface ActionCreator<A extends Action = Action> {
   (...args: any[]): A;
 }
 
